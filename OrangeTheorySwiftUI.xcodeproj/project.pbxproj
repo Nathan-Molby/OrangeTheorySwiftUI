@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		E0CA4F9A2D531EED00FA525C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E0CA4F652D53018B00FA525C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E0CA4F6C2D53018B00FA525C;
+			remoteInfo = OrangeTheorySwiftUI;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		E0CA4F6D2D53018B00FA525C /* OrangeTheorySwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrangeTheorySwiftUI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0CA4F962D531EED00FA525C /* OrangeTheorySwiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OrangeTheorySwiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = OrangeTheorySwiftUI;
 			sourceTree = "<group>";
 		};
+		E0CA4F972D531EED00FA525C /* OrangeTheorySwiftUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = OrangeTheorySwiftUITests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		E0CA4F6A2D53018B00FA525C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0CA4F932D531EED00FA525C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				E0CA4F6F2D53018B00FA525C /* OrangeTheorySwiftUI */,
+				E0CA4F972D531EED00FA525C /* OrangeTheorySwiftUITests */,
 				E0CA4F6E2D53018B00FA525C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				E0CA4F6D2D53018B00FA525C /* OrangeTheorySwiftUI.app */,
+				E0CA4F962D531EED00FA525C /* OrangeTheorySwiftUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = E0CA4F6D2D53018B00FA525C /* OrangeTheorySwiftUI.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E0CA4F952D531EED00FA525C /* OrangeTheorySwiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0CA4F9C2D531EED00FA525C /* Build configuration list for PBXNativeTarget "OrangeTheorySwiftUITests" */;
+			buildPhases = (
+				E0CA4F922D531EED00FA525C /* Sources */,
+				E0CA4F932D531EED00FA525C /* Frameworks */,
+				E0CA4F942D531EED00FA525C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E0CA4F9B2D531EED00FA525C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E0CA4F972D531EED00FA525C /* OrangeTheorySwiftUITests */,
+			);
+			name = OrangeTheorySwiftUITests;
+			packageProductDependencies = (
+			);
+			productName = OrangeTheorySwiftUITests;
+			productReference = E0CA4F962D531EED00FA525C /* OrangeTheorySwiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,6 +130,10 @@
 				TargetAttributes = {
 					E0CA4F6C2D53018B00FA525C = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					E0CA4F952D531EED00FA525C = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = E0CA4F6C2D53018B00FA525C;
 					};
 				};
 			};
@@ -100,12 +152,20 @@
 			projectRoot = "";
 			targets = (
 				E0CA4F6C2D53018B00FA525C /* OrangeTheorySwiftUI */,
+				E0CA4F952D531EED00FA525C /* OrangeTheorySwiftUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E0CA4F6B2D53018B00FA525C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E0CA4F942D531EED00FA525C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +182,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E0CA4F922D531EED00FA525C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E0CA4F9B2D531EED00FA525C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E0CA4F6C2D53018B00FA525C /* OrangeTheorySwiftUI */;
+			targetProxy = E0CA4F9A2D531EED00FA525C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E0CA4F7A2D53018D00FA525C /* Debug */ = {
@@ -317,6 +392,52 @@
 			};
 			name = Release;
 		};
+		E0CA4F9D2D531EED00FA525C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DCGQG3Y9YK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nathanmolby.OrangeTheorySwiftUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OrangeTheorySwiftUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OrangeTheorySwiftUI";
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Debug;
+		};
+		E0CA4F9E2D531EED00FA525C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = DCGQG3Y9YK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.7;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nathanmolby.OrangeTheorySwiftUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OrangeTheorySwiftUI.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OrangeTheorySwiftUI";
+				XROS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -334,6 +455,15 @@
 			buildConfigurations = (
 				E0CA4F7D2D53018D00FA525C /* Debug */,
 				E0CA4F7E2D53018D00FA525C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E0CA4F9C2D531EED00FA525C /* Build configuration list for PBXNativeTarget "OrangeTheorySwiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E0CA4F9D2D531EED00FA525C /* Debug */,
+				E0CA4F9E2D531EED00FA525C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
