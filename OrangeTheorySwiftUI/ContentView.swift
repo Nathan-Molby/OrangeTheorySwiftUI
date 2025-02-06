@@ -8,14 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var treadmillDataProvider: TreadmillDataProvider = StaticTreadmillDataProvider(incline: .init(value: 2, unit: .incline), speed: .init(value: 6, unit: .milesPerHour))
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            Tab("Treadmill", systemImage: "figure.run") {
+                TreadmillView()
+                    .environment(\.treadmillDataProvider, treadmillDataProvider)
+            }
+            
+            Tab("Rower", systemImage: "figure.rower") {
+                Text("Rower TODO")
+            }
+            
+            Tab("Settings", systemImage: "gearshape") {
+                Text("Settings TODO")
+            }
         }
-        .padding()
     }
 }
 
