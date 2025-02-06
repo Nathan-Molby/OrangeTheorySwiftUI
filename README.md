@@ -1,10 +1,15 @@
 # The Goal
-The goal of this project is to recreate most of the features of the Orange Theory Tablet. 
+The goal of this project is to recreate most of the features of the Orange Theory Tablet in order to understand some new-to-me Swift APIS.
 
-I intend to use Swift Charts for the graphs and create a few different implementations of the "track" oval (see picture below) to showcase different ways to create it. I'm also planning to allow the layout to be very adaptive to support any sized tablet and (eventually) iPhone.
-
-For the data, I'm planning to create a data protocol and provide a few different mock implementations to simulate workouts. It would theoretically be possible to create an adapter to a real hardware device (like a treadmill), but I don't intend on doing that.
-
+## Objectives
+- Use [Swift Charts](https://developer.apple.com/documentation/charts) to create beautiful and organic maps
+- Use [Measurements](https://developer.apple.com/documentation/foundation/measurement) to store unit-agnostic data and allow the user to change what unit they would like it to be displayed in.
+- Completely localize the app using [String Catalog](https://developer.apple.com/documentation/xcode/localizing-and-varying-text-with-a-string-catalog) and translate it to at least one other language
+- Create a hyper-adaptable layout. Ideally, the display (shown below) will look good on an iPhone, iPad, and Mac.
+- Create a generic data layer that would allow this display to support data from any hardware
+    - Creating the actual adapter from the hardware layer is out of scope for this project. Instead, I intend to create a few different "mock" providers to showcase what it would look like.
+- Support both dark and light mode
+- Use environment to propogate data through the app
 
 ## The Treadmill Display (WIP)
 
