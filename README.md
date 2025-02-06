@@ -1,5 +1,5 @@
 # The Goal
-The goal of this project is to recreate most of the features of the Orange Theory Tablet in order to understand some new-to-me Swift APIS.
+The goal of this project is to recreate most of the features of the Orange Theory Tablet in order to understand some new-to-me Swift APIs.
 
 ## Objectives
 - Use [Swift Charts](https://developer.apple.com/documentation/charts) to create beautiful and organic maps
