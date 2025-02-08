@@ -8,37 +8,35 @@
 import Foundation
 
 /// A basic treadmill data provider that stays at the input speed and incline.
-struct StaticTreadmillDataProvider: TreadmillDataProvider {
+struct StaticTreadmillDataProvider: FakeTreadmillDataProvider {
 
     var currentIncline: Measurement<UnitAngle>
     var currentSpeed: Measurement<UnitSpeed>
     let startDate: Date
     
-    init(incline: Measurement<UnitAngle>, speed: Measurement<UnitSpeed>) {
+    init(startDate: Date, incline: Measurement<UnitAngle>, speed: Measurement<UnitSpeed>) {
         currentIncline = incline
         currentSpeed = speed
-        startDate = .now
+        self.startDate = startDate
     }
     
     var currentDistance: Measurement<UnitLength> = .init(value: 0, unit: .meters)
     
-    var currentTime: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
+    var timeSinceStart: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
     
     var speedHistory: [Measurement<UnitDuration> : Measurement<UnitSpeed>] = [:]
     
     var inclineHistory: [Measurement<UnitDuration> : Measurement<UnitAngle>] = [:]
     
-    /// Updates the currentDistance and currentTime
-    mutating func executeCurrentDataMeasurement() {
-        let oldTime = currentTime
-        currentTime = .init(value: Date.now - startDate, unit: .seconds)
+    mutating func executeDataMeasurement(forTime: Date) {
+        timeSinceStart = Measurement<UnitDuration>(value: forTime - startDate, unit: .seconds)
         
-        currentDistance += currentSpeed * (currentTime - oldTime)
+        currentDistance += currentSpeed * timeSinceStart
     }
     
-    /// Updates speedHistory and inclineHistory
-    mutating func executeHistoryDataMeasurement() {
-        speedHistory[currentTime] = currentSpeed
-        inclineHistory[currentTime] = currentIncline
+    mutating func executeHistoryDataMeasurement(forTime: Date) {
+        timeSinceStart = Measurement<UnitDuration>(value: forTime - startDate, unit: .seconds)
+        speedHistory[timeSinceStart] = currentSpeed
+        inclineHistory[timeSinceStart] = currentIncline
     }
 }

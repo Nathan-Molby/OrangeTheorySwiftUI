@@ -14,7 +14,7 @@ protocol TreadmillDataProvider {
     var currentDistance: Measurement<UnitLength> { get }
     
     /// The user's current time on the treadmill
-    var currentTime: Measurement<UnitDuration> { get }
+    var timeSinceStart: Measurement<UnitDuration> { get }
     
     /// The user's current incline on the treadmill
     var currentIncline: Measurement<UnitAngle> { get }
@@ -29,4 +29,5 @@ protocol TreadmillDataProvider {
     /// A list of the user's incline at points in time since they began running.
     /// The key must be >= 0 and <= currentTime
     var inclineHistory: [Measurement<UnitDuration>: Measurement<UnitAngle>] { get }
+    
 }
