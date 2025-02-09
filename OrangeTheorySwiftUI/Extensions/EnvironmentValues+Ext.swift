@@ -8,5 +8,7 @@
 import SwiftUI
 
 extension EnvironmentValues {
-    @Entry var treadmillDataProvider: TreadmillDataProvider = StaticTreadmillDataProvider(startDate: .now, incline: .init(value: 2, unit: .incline), speed: .init(value: 5, unit: .milesPerHour))
+    @Entry var treadmillDataProvider: TreadmillDataProvider = PreviewTreadmillDataProvider()
+    
+    @Entry var configuration = Configuration()
 }
