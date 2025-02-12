@@ -16,6 +16,7 @@ extension Font {
     static let largestLight = Font.custom(fontLight, size: 70, relativeTo: .largeTitle)
     
     static let medium = Font.custom(fontRegular, size: 30, relativeTo: .headline)
+    static let mediumBold = Font.custom(fontBold, size: 30, relativeTo: .headline)
     static let mediumLight = Font.custom(fontLight, size: 30, relativeTo: .headline)
     
     

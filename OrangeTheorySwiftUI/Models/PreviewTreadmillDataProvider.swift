@@ -24,7 +24,9 @@ struct PreviewTreadmillDataProvider: TreadmillDataProvider {
         .init(value: 6, unit: .minutes): .init(value: 6.0, unit: .milesPerHour),
         .init(value: 9, unit: .minutes): .init(value: 7.0, unit: .milesPerHour),
         .init(value: 12, unit: .minutes): .init(value: 6.5, unit: .milesPerHour),
-        .init(value: 15, unit: .minutes): .init(value: 6.5, unit: .milesPerHour)
+        .init(value: 15, unit: .minutes): .init(value: 6.5, unit: .milesPerHour),
+        .init(value: 16, unit: .minutes): .init(value: 1, unit: .milesPerHour),
+        .init(value: 20, unit: .minutes): .init(value: 5, unit: .milesPerHour)
     ]
     
     var inclineHistory: [Measurement<UnitDuration> : Measurement<UnitAngle>] = [
