@@ -17,17 +17,17 @@ struct GraphView<M: Dimension>: View {
         return averageBySecond.first(where: { $0.0 == second })?.1
     }
     
-    var chartXScale: [Int] {
+    var chartXScale: ClosedRange<Int> {
         let chartMax = averageBySecond.map(\.0).max() ?? 0
         let chartMin = max(0, chartMax - Int(chartWidth.converted(to: .seconds).value))
         
-        return [chartMin, chartMax]
+        return chartMin...chartMax
     }
 
     var body: some View {
         Chart {
             ForEach(averageBySecond.map(\.0), id: \.self) { secondOnChart in
-                if let averageAtSecond = averageAt(secondOnChart) {
+                if let averageAtSecond = averageAt(secondOnChart), chartXScale.contains(secondOnChart) {
                     AreaMark(x: .value("Second", secondOnChart), y: .value("Average", averageAtSecond))
                         .foregroundStyle(
                             LinearGradient(
@@ -46,6 +46,7 @@ struct GraphView<M: Dimension>: View {
                 }
             }
             
+            //TODO: ensure metrics prior to start of scale don't display
             ForEach(metricBySecond, id: \.0) { second, metric in
                 LineMark(x: .value("Second", second), y: .value("Metric", metric))
                     .foregroundStyle(.white)
@@ -54,16 +55,20 @@ struct GraphView<M: Dimension>: View {
             
 
         }
+        .chartXAxis(.hidden)
+        .chartYScale(domain: 0...15)
+        .chartXScale(domain: chartXScale)
         .chartYAxis {
             AxisMarks(position: .leading, values: [3, 6, 9, 12]) {
                 AxisValueLabel()
                     .font(.mediumBold)
                     .foregroundStyle(.white)
+                
+                AxisGridLine()
+                    .foregroundStyle(.white)
             }
         }
-        .chartXAxis(.hidden)
-        .chartYScale(domain: [0, 15])
-        .chartXScale(domain: chartXScale)
+
     }
 }
 
@@ -73,6 +78,6 @@ struct GraphView<M: Dimension>: View {
     let averageSpeedHistory = Configuration().calculateAndFormatSpeedAverage(speedHistory)
     
     return GraphView(metricBySecond: formattedSpeedHistory, averageBySecond: averageSpeedHistory)
-        .environment(\.configuration.chartWidth, .init(value: 30, unit: .minutes))
+        .environment(\.configuration.chartWidth, .init(value: 10, unit: .minutes))
         .frame(height: 400)
 }
