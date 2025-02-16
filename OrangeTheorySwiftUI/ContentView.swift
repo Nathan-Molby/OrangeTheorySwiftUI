@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var treadmillDataProvider: TreadmillDataProvider = StaticTreadmillDataProvider(startDate: .now, incline: .init(value: 2, unit: .incline), speed: .init(value: 6, unit: .milesPerHour))
+    @State var treadmillDataProvider: TreadmillDataProvider = PreviewTreadmillDataProvider()
     
     var body: some View {
         TabView {
@@ -25,6 +25,7 @@ struct ContentView: View {
                 Text("Settings TODO")
             }
         }
+        .preferredColorScheme(.dark)
     }
 }
 

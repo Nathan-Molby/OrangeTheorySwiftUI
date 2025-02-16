@@ -8,9 +8,22 @@
 import SwiftUI
 import Charts
 
+struct GraphConfiguration {
+    let scale: ClosedRange<Int>
+    
+    let yMarkers: [Int]
+    
+    // Making the format generic would add a lot of complexity
+    // Since this graph doesn't need to support other formats,
+    // We'll just use this boolean to reduce scope
+    let formatAsPercentage: Bool
+}
+
 struct GraphView<M: Dimension>: View {
     let metricBySecond: [(Int, Double)]
     let averageBySecond: [(Int, Double)]
+    let configuration: GraphConfiguration
+    
     @Environment(\.configuration.chartWidth) var chartWidth
     
     func averageAt(_ second: Int) -> Double? {
@@ -50,24 +63,31 @@ struct GraphView<M: Dimension>: View {
             ForEach(metricBySecond, id: \.0) { second, metric in
                 LineMark(x: .value("Second", second), y: .value("Metric", metric))
                     .foregroundStyle(.white)
-                    .lineStyle(.init(lineWidth: 10))
+                    .lineStyle(.init(lineWidth: 7))
             }
             
 
         }
         .chartXAxis(.hidden)
-        .chartYScale(domain: 0...15)
+        .chartYScale(domain: configuration.scale)
         .chartXScale(domain: chartXScale)
         .chartYAxis {
-            AxisMarks(position: .leading, values: [3, 6, 9, 12]) {
-                AxisValueLabel()
-                    .font(.mediumBold)
-                    .foregroundStyle(.white)
+            AxisMarks(position: .trailing, values: configuration.yMarkers) {
+                if configuration.formatAsPercentage {
+                    AxisValueLabel(format: Decimal.FormatStyle.Percent.percent.scale(1))
+                        .font(.mediumBold)
+                        .foregroundStyle(.white)
+                } else {
+                    AxisValueLabel()
+                        .font(.mediumBold)
+                        .foregroundStyle(.white)
+                }
                 
                 AxisGridLine()
                     .foregroundStyle(.white)
             }
         }
+        .clipped()
 
     }
 }
@@ -77,7 +97,7 @@ struct GraphView<M: Dimension>: View {
     let formattedSpeedHistory = Configuration().formatSpeed(speedHistory)
     let averageSpeedHistory = Configuration().calculateAndFormatSpeedAverage(speedHistory)
     
-    return GraphView(metricBySecond: formattedSpeedHistory, averageBySecond: averageSpeedHistory)
+    GraphView(metricBySecond: formattedSpeedHistory, averageBySecond: averageSpeedHistory, configuration: GraphConfiguration(scale: 0...15, yMarkers: [3, 6, 9, 12], formatAsPercentage: false))
         .environment(\.configuration.chartWidth, .init(value: 10, unit: .minutes))
         .frame(height: 400)
 }
