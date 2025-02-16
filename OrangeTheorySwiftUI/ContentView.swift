@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var treadmillDataProvider: TreadmillDataProvider = PreviewTreadmillDataProvider()
+    @State var treadmillDataProvider: FakeTreadmillDataProvider = WorkoutTreadmillDataProvider(startDate: .now)
+    @State var currentTime = Date.now
     
     var body: some View {
         TabView {
@@ -26,6 +27,17 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .task {
+            for await _ in Timer.publish(every: 1, on: .main, in: .common).autoconnect().values {
+                currentTime = currentTime.addingTimeInterval(15)
+                treadmillDataProvider.executeDataMeasurement(forTime: currentTime)
+            }
+        }
+        .task {
+            for await _ in Timer.publish(every: 1, on: .main, in: .common).autoconnect().values {
+                treadmillDataProvider.executeHistoryDataMeasurement(forTime: currentTime)
+            }
+        }
     }
 }
 

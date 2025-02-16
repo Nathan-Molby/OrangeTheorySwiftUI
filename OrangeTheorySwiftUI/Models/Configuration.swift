@@ -13,7 +13,7 @@ struct Configuration {
     var lengthUnit: UnitLength = .miles
     var speedUnit: UnitSpeed = .milesPerHour
     var inclineUnit: UnitAngle = .incline
-    var durationUnit: UnitDuration = .minutes
+    var trackDistance: Measurement<UnitLength> = .init(value: 0.25, unit: .miles)
     var chartWidth = Measurement<UnitDuration>(value: 10, unit: .minutes)
     
     func formatLength(_ input: Measurement<UnitLength>) -> MetricWithUnit {
@@ -27,8 +27,27 @@ struct Configuration {
     }
     
     func formatTime(_ input: Measurement<UnitDuration>) -> MetricWithUnit {
-        let formattedInput = input.formatted(.measurement(width: .abbreviated))
-        return .formattedByLocale(formattedInput)
+        let totalSeconds = Int(input.converted(to: .seconds).value)
+        let minutes = totalSeconds / 60
+        let seconds = totalSeconds % 60
+        let formattedTime: String
+        
+        if minutes >= 100 {
+            formattedTime = String(format: "%d:%02d", minutes, seconds)
+        } else {
+            formattedTime = String(format: "%02d:%02d", minutes, seconds)
+        }
+        
+        return .formattedByLocale(formattedTime)
+    }
+    
+    /// Converts the current distance into a track percentage
+    func formatTrackPercentage(_ input: Measurement<UnitLength>) -> Double {
+        let currentMiles = input.converted(to: .miles).value
+        let trackMiles = trackDistance.converted(to: .miles).value
+        
+        let remainderCurrentMiles = currentMiles.truncatingRemainder(dividingBy: trackMiles)
+        return remainderCurrentMiles / trackMiles
     }
     
     /// Converts a dictionary of unit-agnostic durations -> speeds into a dictionary of seconds -> user-chosen speed unit

@@ -9,7 +9,7 @@ import SwiftUI
 
 /// Displays a progress in the form of a track
 struct AddTrackProgressViewModifier: ViewModifier {
-    let endProgress: CGFloat = 0.5
+    let progress: CGFloat
     
     func body(content: Content) -> some View {
         content
@@ -17,36 +17,41 @@ struct AddTrackProgressViewModifier: ViewModifier {
             .padding(.horizontal, 40)
             .background {
                 ZStack {
-                    RoundedRectangle(cornerRadius: 150)
-                        .strokeBorder(.chartSecondary, lineWidth: 7)
-                        .mask {
-                            MaskableCircle(progress: endProgress)
-                                .scale(3)
-                                .rotation(.degrees(90))
-                        }
-                        
+                    CustomRoundedRectangle(cornerRadius: 150, percentFilled: progress)
+                        .stroke(Color.chartSecondary, lineWidth: 5)
+                    
+                    DotOnRoundedRectangle(cornerRadius: 150, circleRadius: 15, percentFilled: progress)
+                        .fill(Color.chartSecondary)
                 }
+                .padding(15)
 
             }
     }
 }
+
+extension View {
+    func addProgressTracker(progress: CGFloat) -> some View {
+        modifier(AddTrackProgressViewModifier(progress: progress))
+    }
+}
+
 #Preview {
-//    HStack() {
-//        Spacer()
-//        
-//        MetricView(metricWithUnit: .manuallyFormatted(metric: "20", unit: "mi"), label: "Distance")
-//
-//        Spacer()
-//        
-//        MetricView(metricWithUnit: .manuallyFormatted(metric: "27:45", unit: "minutes"), label: "Time")
-//        
-//        Spacer()
-//
-//    }
+    @Previewable @State var percentFilled: CGFloat = 0.01
     
-    Text("Content")
-        .frame(maxWidth: .infinity)
-        .frame(height: 200)
-        .modifier(AddTrackProgressViewModifier())
+    VStack {
+        Button("Click Me") {
+            withAnimation {
+                percentFilled = .random(in: 0...1)
+            }
+        }
+        Slider(value: $percentFilled, in: 0...1)
+        
+        Text("Content")
+            .frame(width: 400)
+            .frame(height: 200)
+            .addProgressTracker(progress: percentFilled)
+    }
+    
+
 
 }

@@ -24,7 +24,7 @@ struct TreadmillView: View {
                 Text("OTConnect")
                     .font(.largest)
                 
-                HStack(spacing: 100) {
+                HStack {
                     Spacer()
                     
                     MetricView(metricWithUnit: configuration.formatLength(dataProvider.currentDistance), label: .init(localized: "Distance"), icon: .init(systemName: "arrow.triangle.swap"))
@@ -35,6 +35,7 @@ struct TreadmillView: View {
                     
                     Spacer()
                 }
+                .addProgressTracker(progress: configuration.formatTrackPercentage(dataProvider.currentDistance))
                 
                 HStack(spacing: 20) {
                     GraphView(metricBySecond: configuration.formatIncline(dataProvider.inclineHistory), averageBySecond: configuration.calculateAndFormatInclineAverage(dataProvider.inclineHistory), configuration: .init(scale: 0...16, yMarkers: [5, 10, 15], formatAsPercentage: true))
