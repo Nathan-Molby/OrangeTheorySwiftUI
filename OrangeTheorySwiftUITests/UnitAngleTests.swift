@@ -10,7 +10,6 @@ import Foundation
 @testable import OrangeTheorySwiftUI
 
 struct OrangeTheorySwiftUITests {
-
     
     @Test(arguments: Array(stride(from: 0, to: 100, by: 1)))
     func testConversionFromIncline(inputIncline: Double)  {

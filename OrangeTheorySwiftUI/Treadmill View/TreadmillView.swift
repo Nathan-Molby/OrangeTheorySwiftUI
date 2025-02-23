@@ -27,21 +27,36 @@ struct TreadmillView: View {
                 HStack {
                     Spacer()
                     
-                    MetricView(metricWithUnit: configuration.formatLength(dataProvider.currentDistance), label: .init(localized: "Distance"), icon: .init(systemName: "arrow.triangle.swap"))
+                    MetricWithIconView(metricWithUnit: configuration.formatLength(dataProvider.currentDistance), label: .init(localized: "Distance"), icon: .init(systemName: "arrow.triangle.swap"))
                     
                     Spacer()
                     
-                    MetricView(metricWithUnit: configuration.formatTime(dataProvider.timeSinceStart), label: .init(localized: "Time"), icon: .init(systemName: "stopwatch"))
+                    MetricWithIconView(metricWithUnit: configuration.formatTime(dataProvider.timeSinceStart), label: .init(localized: "Time"), icon: .init(systemName: "stopwatch"))
                     
                     Spacer()
                 }
                 .addProgressTracker(progress: configuration.formatTrackPercentage(dataProvider.currentDistance))
                 
                 HStack(spacing: 20) {
-                    GraphView(metricBySecond: configuration.formatIncline(dataProvider.inclineHistory), averageBySecond: configuration.calculateAndFormatInclineAverage(dataProvider.inclineHistory), configuration: .init(scale: 0...16, yMarkers: [5, 10, 15], formatAsPercentage: true))
-                    
-                    GraphView(metricBySecond: configuration.formatSpeed(dataProvider.speedHistory), averageBySecond: configuration.calculateAndFormatSpeedAverage(dataProvider.speedHistory), configuration: .init(scale: 0...13, yMarkers: [3, 6, 9, 12], formatAsPercentage: false))
+                    VStack {
+                        MetricView(metric: configuration.formatIncline(dataProvider.currentIncline), label: "INCLINE")
+                        
+                        GraphView(metricBySecond: configuration.formatInclineForGraph(dataProvider.inclineHistory), averageBySecond: configuration.calculateInclineAverageForGraph(dataProvider.inclineHistory), configuration: .init(scale: 0...16, yMarkers: [5, 10, 15], formatAsPercentage: true))
+                        
+                        MiniMetricView(metric: configuration.formatIncline(dataProvider.averageIncline), label: "AVG")
+                    }
 
+                    VStack {
+                        MetricView(metric: configuration.formatSpeed(dataProvider.currentSpeed), label: configuration.speedUnit.symbol)
+        
+                        
+                        GraphView(metricBySecond: configuration.formatSpeedForGraph(dataProvider.speedHistory), averageBySecond: configuration.calculateSpeedAverageForGraph(dataProvider.speedHistory), configuration: .init(scale: 0...13, yMarkers: [3, 6, 9, 12], formatAsPercentage: false))
+                        
+                        HStack {
+                            MiniMetricView(metric: configuration.formatPace(at: dataProvider.currentSpeed), label: "PACE")
+                        }
+
+                    }
                 }
             }
         }

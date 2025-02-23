@@ -75,11 +75,11 @@ struct GraphView<M: Dimension>: View {
             AxisMarks(position: .trailing, values: configuration.yMarkers) {
                 if configuration.formatAsPercentage {
                     AxisValueLabel(format: Decimal.FormatStyle.Percent.percent.scale(1))
-                        .font(.mediumBold)
+                        .font(.medium.bold())
                         .foregroundStyle(.white)
                 } else {
                     AxisValueLabel()
-                        .font(.mediumBold)
+                        .font(.medium.bold())
                         .foregroundStyle(.white)
                 }
                 
@@ -94,8 +94,8 @@ struct GraphView<M: Dimension>: View {
 
 #Preview("Speed") {
     let speedHistory = PreviewTreadmillDataProvider().speedHistory
-    let formattedSpeedHistory = Configuration().formatSpeed(speedHistory)
-    let averageSpeedHistory = Configuration().calculateAndFormatSpeedAverage(speedHistory)
+    let formattedSpeedHistory = Configuration().formatSpeedForGraph(speedHistory)
+    let averageSpeedHistory = Configuration().calculateSpeedAverageForGraph(speedHistory)
     
     GraphView(metricBySecond: formattedSpeedHistory, averageBySecond: averageSpeedHistory, configuration: GraphConfiguration(scale: 0...15, yMarkers: [3, 6, 9, 12], formatAsPercentage: false))
         .environment(\.configuration.chartWidth, .init(value: 10, unit: .minutes))

@@ -17,6 +17,9 @@ struct AddTrackProgressViewModifier: ViewModifier {
             .padding(.horizontal, 40)
             .background {
                 ZStack {
+                    CustomRoundedRectangle(cornerRadius: 150, percentFilled: 100)
+                        .stroke(.gray, lineWidth: 5)
+                    
                     CustomRoundedRectangle(cornerRadius: 150, percentFilled: progress)
                         .stroke(Color.chartSecondary, lineWidth: 5)
                     
@@ -51,7 +54,4 @@ extension View {
             .frame(height: 200)
             .addProgressTracker(progress: percentFilled)
     }
-    
-
-
 }

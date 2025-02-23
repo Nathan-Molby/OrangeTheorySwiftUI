@@ -13,4 +13,13 @@ enum MetricWithUnit {
     
     /// When the metric is formatted by the locale
     case formattedByLocale(_ value: String)
+    
+    var metric: String {
+        switch self {
+        case .manuallyFormatted(let metric, _):
+            return metric
+        case .formattedByLocale(let value):
+            return value
+        }
+    }
 }
