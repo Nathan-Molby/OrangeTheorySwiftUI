@@ -9,7 +9,6 @@ import Foundation
 
 /// A basic treadmill data provider that stays at the input speed and incline.
 struct StaticTreadmillDataProvider: FakeTreadmillDataProvider {
-
     var currentIncline: Measurement<UnitAngle>
     var currentSpeed: Measurement<UnitSpeed>
     let startDate: Date
@@ -22,21 +21,22 @@ struct StaticTreadmillDataProvider: FakeTreadmillDataProvider {
     
     var currentDistance: Measurement<UnitLength> = .init(value: 0, unit: .meters)
     
-    var timeSinceStart: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
+    var timeSinceStart: TimeInterval = .second(0)
     
-    var speedHistory: [Measurement<UnitDuration> : Measurement<UnitSpeed>] = [:]
+    var speedHistory: [(time: TimeInterval, speed: Measurement<UnitSpeed>)] = []
     
-    var inclineHistory: [Measurement<UnitDuration> : Measurement<UnitAngle>] = [:]
+    var inclineHistory: [(time: TimeInterval, angle: Measurement<UnitAngle>)] = []
     
     mutating func executeDataMeasurement(forTime: Date) {
-        timeSinceStart = Measurement<UnitDuration>(value: forTime - startDate, unit: .seconds)
+        timeSinceStart = forTime.timeIntervalSince(startDate)
         
-        currentDistance += currentSpeed * timeSinceStart
+        let elapsedTime = Measurement(value: timeSinceStart, unit: UnitDuration.seconds)
+        currentDistance += currentSpeed * elapsedTime
     }
     
     mutating func executeHistoryDataMeasurement(forTime: Date) {
-        timeSinceStart = Measurement<UnitDuration>(value: forTime - startDate, unit: .seconds)
-        speedHistory[timeSinceStart] = currentSpeed
-        inclineHistory[timeSinceStart] = currentIncline
+        timeSinceStart = forTime.timeIntervalSince(startDate)
+        speedHistory.append((time: timeSinceStart, speed: currentSpeed))
+        inclineHistory.append((time: timeSinceStart, angle: currentIncline))
     }
 }

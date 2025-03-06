@@ -14,7 +14,7 @@ protocol TreadmillDataProvider {
     var currentDistance: Measurement<UnitLength> { get }
     
     /// The user's current time on the treadmill
-    var timeSinceStart: Measurement<UnitDuration> { get }
+    var timeSinceStart: TimeInterval { get }
     
     /// The user's current incline on the treadmill
     var currentIncline: Measurement<UnitAngle> { get }
@@ -24,12 +24,11 @@ protocol TreadmillDataProvider {
 
     /// A list of the user's speeds at points in time since they began running.
     /// The key must be >= 0 and <= currentTime
-    var speedHistory: [Measurement<UnitDuration>: Measurement<UnitSpeed>] { get }
+    var speedHistory: [(time: TimeInterval, speed: Measurement<UnitSpeed>)] { get }
     
     /// A list of the user's incline at points in time since they began running.
     /// The key must be >= 0 and <= currentTime
-    var inclineHistory: [Measurement<UnitDuration>: Measurement<UnitAngle>] { get }
-    
+    var inclineHistory: [(time: TimeInterval, angle: Measurement<UnitAngle>)] { get }
 }
 
 extension TreadmillDataProvider {
@@ -39,32 +38,29 @@ extension TreadmillDataProvider {
             return Measurement(value: 0, unit: UnitSpeed.metersPerSecond)
         }
         
-        // Handle single entry case
         guard speedHistory.count > 1 else {
-            return speedHistory.first!.value
+            return speedHistory.first!.speed
         }
         
-        // Sort entries by time
-        let sortedEntries = speedHistory.sorted { $0.key.value < $1.key.value }
         var weightedSum = 0.0
         var totalDuration = 0.0
         
         // Calculate weighted average using time intervals
-        for i in 0..<(sortedEntries.count - 1) {
-            let currentTime = sortedEntries[i].key.value
-            let nextTime = sortedEntries[i + 1].key.value
+        for i in 0..<(speedHistory.count - 1) {
+            let currentTime = speedHistory[i].time
+            let nextTime = speedHistory[i + 1].time
             let duration = nextTime - currentTime
-            let speed = sortedEntries[i].value.value
+            let speed = speedHistory[i].speed.converted(to: .metersPerSecond).value
             
             weightedSum += speed * duration
             totalDuration += duration
         }
         
         // Include the last entry with the remaining time up to current time
-        if let lastEntry = sortedEntries.last {
-            let remainingDuration = timeSinceStart.value - lastEntry.key.value
+        if let lastEntry = speedHistory.last {
+            let remainingDuration = timeSinceStart - lastEntry.time
             if remainingDuration > 0 {
-                weightedSum += lastEntry.value.value * remainingDuration
+                weightedSum += lastEntry.speed.value * remainingDuration
                 totalDuration += remainingDuration
             }
         }
@@ -79,32 +75,30 @@ extension TreadmillDataProvider {
             return Measurement(value: 0, unit: UnitAngle.degrees)
         }
         
-        // Handle single entry case
         guard inclineHistory.count > 1 else {
-            return inclineHistory.first!.value
+            return inclineHistory.first!.angle
         }
         
         // Sort entries by time
-        let sortedEntries = inclineHistory.sorted { $0.key.value < $1.key.value }
         var weightedSum = 0.0
         var totalDuration = 0.0
         
         // Calculate weighted average using time intervals
-        for i in 0..<(sortedEntries.count - 1) {
-            let currentTime = sortedEntries[i].key.value
-            let nextTime = sortedEntries[i + 1].key.value
+        for i in 0..<(inclineHistory.count - 1) {
+            let currentTime = inclineHistory[i].time
+            let nextTime = inclineHistory[i + 1].time
             let duration = nextTime - currentTime
-            let incline = sortedEntries[i].value.value
+            let incline = inclineHistory[i].angle.converted(to: .degrees).value
             
             weightedSum += incline * duration
             totalDuration += duration
         }
         
         // Include the last entry with the remaining time up to current time
-        if let lastEntry = sortedEntries.last {
-            let remainingDuration = timeSinceStart.value - lastEntry.key.value
+        if let lastEntry = inclineHistory.last {
+            let remainingDuration = timeSinceStart - lastEntry.time
             if remainingDuration > 0 {
-                weightedSum += lastEntry.value.value * remainingDuration
+                weightedSum += lastEntry.angle.converted(to: .degrees).value * remainingDuration
                 totalDuration += remainingDuration
             }
         }

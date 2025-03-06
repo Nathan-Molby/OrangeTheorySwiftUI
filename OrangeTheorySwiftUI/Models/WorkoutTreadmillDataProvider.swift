@@ -12,9 +12,9 @@ struct WorkoutTreadmillDataProvider: FakeTreadmillDataProvider {
     var currentIncline: Measurement<UnitAngle>
     var currentSpeed: Measurement<UnitSpeed>
     var currentDistance: Measurement<UnitLength> = .init(value: 0, unit: .meters)
-    var timeSinceStart: Measurement<UnitDuration> = .init(value: 0, unit: .seconds)
-    var speedHistory: [Measurement<UnitDuration> : Measurement<UnitSpeed>] = [:]
-    var inclineHistory: [Measurement<UnitDuration> : Measurement<UnitAngle>] = [:]
+    var timeSinceStart: TimeInterval = .second(0)
+    var speedHistory: [(time: TimeInterval, speed: Measurement<UnitSpeed>)] = []
+    var inclineHistory: [(time: TimeInterval, angle: Measurement<UnitAngle>)] = []
     
     // Workout phases in minutes: (duration, speed in mph, incline in %)
     private let workoutPattern: [(Double, Double, Double)] = [
@@ -27,8 +27,8 @@ struct WorkoutTreadmillDataProvider: FakeTreadmillDataProvider {
         (2, 2.5, 0)     // Final walking cool down
     ]
     
-    private lazy var patternDuration: Double = {
-        return workoutPattern.reduce(0) { $0 + $1.0 }
+    private lazy var patternDuration: TimeInterval = {
+        return .minute(workoutPattern.reduce(0) { $0 + $1.0 })
     }()
     
     init(startDate: Date) {
@@ -39,25 +39,25 @@ struct WorkoutTreadmillDataProvider: FakeTreadmillDataProvider {
     
     mutating func executeDataMeasurement(forTime: Date) {
         let previousTime = timeSinceStart
-        timeSinceStart = Measurement<UnitDuration>(value: forTime.timeIntervalSince(startDate), unit: .seconds)
+        timeSinceStart = forTime.timeIntervalSince(startDate)
         
         updateWorkoutPhase()
         
-        let timeElapsed = timeSinceStart - previousTime
+        let timeElapsed = Measurement(value: timeSinceStart - previousTime, unit: UnitDuration.seconds)
         currentDistance += currentSpeed * timeElapsed
     }
     
     mutating func executeHistoryDataMeasurement(forTime: Date) {
-        timeSinceStart = Measurement<UnitDuration>(value: forTime.timeIntervalSince(startDate), unit: .seconds)
-        speedHistory[timeSinceStart] = currentSpeed
-        inclineHistory[timeSinceStart] = currentIncline
+        timeSinceStart = forTime.timeIntervalSince(startDate)
+        speedHistory.append((time: timeSinceStart, speed: currentSpeed))
+        inclineHistory.append((time: timeSinceStart, angle: currentIncline))
     }
     
     private mutating func updateWorkoutPhase() {
-        let elapsedMinutes = timeSinceStart.converted(to: .minutes).value
+        let elapsedMinutes = timeSinceStart.minutes
         
         // Calculate which iteration of the pattern we're on
-        let normalizedElapsedMinutes = elapsedMinutes.truncatingRemainder(dividingBy: patternDuration)
+        let normalizedElapsedMinutes = elapsedMinutes.truncatingRemainder(dividingBy: patternDuration.minutes)
         
         var accumulatedTime = 0.0
         

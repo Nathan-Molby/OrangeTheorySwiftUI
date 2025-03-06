@@ -41,16 +41,16 @@ struct TreadmillView: View {
                     VStack {
                         MetricView(metric: configuration.formatIncline(dataProvider.currentIncline), label: "INCLINE")
                         
-                        GraphView(metricBySecond: configuration.formatInclineForGraph(dataProvider.inclineHistory), averageBySecond: configuration.calculateInclineAverageForGraph(dataProvider.inclineHistory), configuration: .init(scale: 0...16, yMarkers: [5, 10, 15], formatAsPercentage: true))
+                        GraphView(metricBySecond: configuration.formatInclineForGraph(dataProvider.inclineHistory), averageBySecond: configuration.calculateInclineAverageForGraph(dataProvider.inclineHistory), configuration: .init(yMarkers: configuration.inclineYAxis, yMarkerSuffix: configuration.inclineUnit.unitAngle.symbol))
                         
                         MiniMetricView(metric: configuration.formatIncline(dataProvider.averageIncline), label: "AVG")
                     }
 
                     VStack {
-                        MetricView(metric: configuration.formatSpeed(dataProvider.currentSpeed), label: configuration.speedUnit.symbol)
+                        MetricView(metric: configuration.formatSpeed(dataProvider.currentSpeed), label: configuration.speedUnit.unitSpeed.symbol)
         
                         
-                        GraphView(metricBySecond: configuration.formatSpeedForGraph(dataProvider.speedHistory), averageBySecond: configuration.calculateSpeedAverageForGraph(dataProvider.speedHistory), configuration: .init(scale: 0...13, yMarkers: [3, 6, 9, 12], formatAsPercentage: false))
+                        GraphView(metricBySecond: configuration.formatSpeedForGraph(dataProvider.speedHistory), averageBySecond: configuration.calculateSpeedAverageForGraph(dataProvider.speedHistory), configuration: .init(yMarkers: configuration.speedYAxis, yMarkerSuffix: nil))
                         
                         HStack {
                             MiniMetricView(metric: configuration.formatPace(at: dataProvider.currentSpeed), label: "PACE")

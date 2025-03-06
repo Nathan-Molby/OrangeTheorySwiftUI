@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     @State var treadmillDataProvider: FakeTreadmillDataProvider = WorkoutTreadmillDataProvider(startDate: .now)
     @State var currentTime = Date.now
+    @State var timeSpeedFactor = 1.0
+    @State var configuration = Configuration()
     
     var body: some View {
         TabView {
@@ -18,25 +20,25 @@ struct ContentView: View {
                     .environment(\.treadmillDataProvider, treadmillDataProvider)
             }
             
-            Tab("Rower", systemImage: "figure.rower") {
-                Text("Rower TODO")
-            }
-            
             Tab("Settings", systemImage: "gearshape") {
-                Text("Settings TODO")
+                ConfigurationView(configuration: $configuration, timeSpeedFactor: $timeSpeedFactor)
             }
         }
+        .environment(\.configuration, configuration)
         .preferredColorScheme(.dark)
-        .task {
-            for await _ in Timer.publish(every: 1, on: .main, in: .common).autoconnect().values {
-                currentTime = currentTime.addingTimeInterval(15)
+        .task(id: timeSpeedFactor) {
+            for await _ in Timer.publish(every: 1 / timeSpeedFactor, tolerance: 0.001, on: .main, in: .common).autoconnect().values {
+                currentTime = currentTime.addingTimeInterval(1)
                 treadmillDataProvider.executeDataMeasurement(forTime: currentTime)
+                treadmillDataProvider.executeHistoryDataMeasurement(forTime: currentTime)
+
             }
         }
-        .task {
-            for await _ in Timer.publish(every: 1, on: .main, in: .common).autoconnect().values {
-                treadmillDataProvider.executeHistoryDataMeasurement(forTime: currentTime)
-            }
+        .onAppear {
+            UISegmentedControl.appearance().setTitleTextAttributes(
+                [
+                    .font: UIFont.systemFont(ofSize: 25),
+                ], for: .normal)
         }
     }
 }

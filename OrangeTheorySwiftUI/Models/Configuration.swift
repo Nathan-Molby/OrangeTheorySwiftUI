@@ -8,31 +8,58 @@
 import Foundation
 
 struct Configuration {
-    var lengthUnit: UnitLength = .miles
-    var speedUnit: UnitSpeed = .milesPerHour
-    var inclineUnit: UnitAngle = .incline
-    var trackDistance: Measurement<UnitLength> = .init(value: 0.25, unit: .miles)
-    var chartWidth = Measurement<UnitDuration>(value: 5, unit: .minutes)
+    var lengthUnit: SupportedLengthUnit = .mile {
+        didSet {
+            trackDistance = trackDistance.converted(to: lengthUnit.unitLength)
+        }
+    }
+    var speedUnit: SupportedSpeedUnit = .milesPerHour
+    var inclineUnit: SupportedAngleUnit = .incline
+    var trackDistance: Measurement<UnitLength> = .init(value: 0.5, unit: .miles)
+    var chartWidthMinutes = 5.0
+    
+    var inclineYAxis: [Double] {
+        let valuesWhenUnitIsIncline = [5.0, 10, 15]
+        
+        return valuesWhenUnitIsIncline
+            .map {
+                let valueInIncline = Measurement<UnitAngle>(value: $0, unit: .incline)
+                
+                return valueInIncline.converted(to: inclineUnit.unitAngle)
+                    .value
+            }
+    }
+    
+    var speedYAxis: [Double] {
+        let valuesWhenUnitIsMph = [3.0, 6, 9, 12]
+        
+        return valuesWhenUnitIsMph
+            .map {
+                let valueInIncline = Measurement<UnitSpeed>(value: $0, unit: .milesPerHour)
+                
+                return valueInIncline.converted(to: speedUnit.unitSpeed)
+                    .value
+            }
+    }
     
     func formatLength(_ input: Measurement<UnitLength>) -> MetricWithUnit {
-        let convertedInput = input.converted(to: lengthUnit)
+        let convertedInput = input.converted(to: lengthUnit.unitLength)
         return .manuallyFormatted(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
     }
     
     func formatIncline(_ input: Measurement<UnitAngle>) -> MetricWithUnit {
-        let convertedInput = input.converted(to: inclineUnit)
+        let convertedInput = input.converted(to: inclineUnit.unitAngle)
         return .manuallyFormatted(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
     }
     
     func formatSpeed(_ input: Measurement<UnitSpeed>) -> MetricWithUnit {
-        let convertedInput = input.converted(to: speedUnit)
+        let convertedInput = input.converted(to: speedUnit.unitSpeed)
         return .manuallyFormatted(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
     }
     
-    func formatTime(_ input: Measurement<UnitDuration>) -> MetricWithUnit {
-        let totalSeconds = Int(input.converted(to: .seconds).value)
-        let minutes = totalSeconds / 60
-        let seconds = totalSeconds % 60
+    func formatTime(_ input: TimeInterval) -> MetricWithUnit {
+        let minutes = Int(input) / 60
+        let seconds = Int(input) % 60
         let formattedTime: String
         
         if minutes >= 100 {
@@ -46,16 +73,16 @@ struct Configuration {
     
     /// Returns the formatted time needed to complete either 1 mile or km, based on configuration at the given speed
     func formatPace(at speed: Measurement<UnitSpeed>) -> MetricWithUnit {
-        let distanceUnit = speedUnit == UnitSpeed.milesPerHour ? UnitLength.miles : .kilometers
-        let speedUnit = speedUnit == UnitSpeed.milesPerHour ? UnitSpeed.milesPerHour : .kilometersPerHour
+        let distanceUnit = speedUnit == .milesPerHour ? UnitLength.miles : .kilometers
+        let speedUnit = speedUnit == .milesPerHour ? UnitSpeed.milesPerHour : .kilometersPerHour
         
         let unitDistance = Measurement(value: 1, unit: distanceUnit)
         
-        let timeInSeconds = unitDistance.value / speed.converted(to: speedUnit).value
+        let timeInHours = unitDistance.value / speed.converted(to: speedUnit).value
         
-        let timeMeasurement = Measurement(value: timeInSeconds, unit: UnitDuration.hours)
+        let timeMeasurement = Measurement(value: timeInHours, unit: UnitDuration.hours)
         
-        return formatTime(timeMeasurement)
+        return formatTime(timeMeasurement.converted(to: .seconds).value)
     }
     
     /// Converts the current distance into a track percentage
@@ -67,71 +94,47 @@ struct Configuration {
         return remainderCurrentMiles / trackMiles
     }
     
-    /// Converts a dictionary of unit-agnostic durations -> speeds into a dictionary of seconds -> configuration-set speed unit
-    func formatSpeedForGraph(_ input: [Measurement<UnitDuration>: Measurement<UnitSpeed>]) -> [(Int, Double)] {
-        return input.map { key, value in
-            return (Int(key.converted(to: .seconds).value), value.converted(to: speedUnit).value)
-        }.sorted { firstTuple, secondTuple in
-            return firstTuple.0 < secondTuple.0
+    /// Converts an array of unit-agnostic durations -> speeds into a dictionary of seconds -> configuration-set speed unit
+    func formatSpeedForGraph(_ input: [(TimeInterval, Measurement<UnitSpeed>)]) -> [(Int, Double)] {
+        return input.map { time, speed in
+            return (lround(time), speed.converted(to: speedUnit.unitSpeed).value)
         }
     }
     
-    /// Converts a dictionary of unit-agnostic durations -> inclines into a dictionary of seconds -> configuration-set incline unit
-    func formatInclineForGraph(_ input: [Measurement<UnitDuration>: Measurement<UnitAngle>]) -> [(Int, Double)] {
-        return input.map { key, value in
-            return (Int(key.converted(to: .seconds).value), value.converted(to: inclineUnit).value)
-        }.sorted { firstTuple, secondTuple in
-            return firstTuple.0 < secondTuple.0
+    /// Converts an array of unit-agnostic durations -> inclines into an array of seconds -> configuration-set incline unit
+    func formatInclineForGraph(_ input: [(TimeInterval, Measurement<UnitAngle>)]) -> [(Int, Double)] {
+        return input.map { time, angle in
+            return (lround(time), angle.converted(to: inclineUnit.unitAngle).value)
         }
     }
     
-    func calculateSpeedAverageForGraph(_ input: [Measurement<UnitDuration>: Measurement<UnitSpeed>]) -> [(Int, Double)] {
+    func calculateSpeedAverageForGraph(_ input: [(TimeInterval, Measurement<UnitSpeed>)]) -> [(Int, Double)] {
         let averages = calculateAverages(input, zeroUnit: .init(value: 0, unit: .milesPerHour))
         
         return averages.map { second, speed in
-            return (second, speed.converted(to: speedUnit).value)
+            return (lround(second), speed.converted(to: speedUnit.unitSpeed).value)
         }
     }
     
-    func calculateInclineAverageForGraph(_ input: [Measurement<UnitDuration>: Measurement<UnitAngle>]) -> [(Int, Double)] {
+    func calculateInclineAverageForGraph(_ input: [(TimeInterval, Measurement<UnitAngle>)]) -> [(Int, Double)] {
         let averages = calculateAverages(input, zeroUnit: .init(value: 0, unit: .degrees))
         
         return averages.map { second, incline in
-            return (second, incline.converted(to: inclineUnit).value)
+            return (lround(second), incline.converted(to: inclineUnit.unitAngle).value)
         }
     }
     
     /// Calculates the averages at every second from maxTime in input array back until maxTime - chartWidth
-    private func calculateAverages<Metric: Dimension>(_ input: [Measurement<UnitDuration>: Measurement<Metric>], zeroUnit: Measurement<Metric>) -> [(Int, Measurement<Metric>)] {
-        guard let maxSecond = input.keys.map({ Int($0.converted(to: .seconds).value) }).max() else {
-            return []
-        }
+    private func calculateAverages<Metric: Dimension>(_ input: [(TimeInterval, Measurement<Metric>)], zeroUnit: Measurement<Metric>) -> [(Double, Measurement<Metric>)] {
+        guard !input.isEmpty else { return [] }
         
-        let secondsToMetricArray = input.map { key, value in
-            return (Int(key.converted(to: .seconds).value), value)
-        }
+        var result: [(Double, Measurement<Metric>)] = []
+        var currentAverage = input[0].1
         
-        let secondsToMetric: [Int: Measurement<Metric>] = .init(secondsToMetricArray) { first, second in
-            return (first + second) / 2
-        }
-        
-        var currentMeasurement = zeroUnit
-        var currentAverage = currentMeasurement
-        var result: [(Int, Measurement<Metric>)] = []
-        
-        // We need to loop through every second because even seconds before chartWidth
-        // need to be included in the average
-        for second in stride(from: 0, to: maxSecond + 1, by: 1) {
-            if let newMeasurement = secondsToMetric[second] {
-                currentMeasurement = newMeasurement
-            }
-            
-            // How much the current average needs to be weighted based
-            let currentAverageWeight = (currentAverage * (Double(second) / Double(second + 1)))
-            
-            currentAverage = currentAverageWeight + currentMeasurement * (1.0 / Double(second + 1))
-            
-            result.append((second, currentAverage))
+        for (index, (timeInterval, measurement)) in input.enumerated() {
+            let weight = 1.0 / Double(index + 1)
+            currentAverage = currentAverage * (1 - weight) + measurement * weight
+            result.append((timeInterval, currentAverage))
         }
         
         return result
