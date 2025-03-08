@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State var treadmillDataProvider: FakeTreadmillDataProvider = WorkoutTreadmillDataProvider(startDate: .now)
+    @State var biometricDataProvider: FakeBiometricsDataProvider = WorkoutBiometricsDataProvider(startDate: .now)
+    
     @State var currentTime = Date.now
     @State var timeSpeedFactor = 1.0
     @State var configuration = Configuration()
@@ -18,6 +20,7 @@ struct ContentView: View {
             Tab("Treadmill", systemImage: "figure.run") {
                 TreadmillView()
                     .environment(\.treadmillDataProvider, treadmillDataProvider)
+                    .environment(\.biometricDataProvider, biometricDataProvider)
             }
             
             Tab("Settings", systemImage: "gearshape") {
@@ -30,7 +33,10 @@ struct ContentView: View {
             for await _ in Timer.publish(every: 1 / timeSpeedFactor, tolerance: 0.001, on: .main, in: .common).autoconnect().values {
                 currentTime = currentTime.addingTimeInterval(1)
                 treadmillDataProvider.executeDataMeasurement(forTime: currentTime)
+                biometricDataProvider.executeDataMeasurement(forTime: currentTime)
+
                 treadmillDataProvider.executeHistoryDataMeasurement(forTime: currentTime)
+                biometricDataProvider.executeHistoryDataMeasurement(forTime: currentTime)
 
             }
         }
@@ -43,6 +49,6 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview(traits: .landscapeLeft) {
     ContentView()
 }

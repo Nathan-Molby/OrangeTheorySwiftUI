@@ -12,6 +12,8 @@ fileprivate let fontRegular = "LEMONMILK-Regular"
 fileprivate let fontLight = "LEMONMILK-Light"
 
 extension Font {
+    static let heartRateFont = Font.custom(fontRegular, size: 90, relativeTo: .largeTitle)
+    
     static let largest = Font.custom(fontRegular, size: 70, relativeTo: .largeTitle)
     static let largestLight = Font.custom(fontLight, size: 70, relativeTo: .largeTitle)
     

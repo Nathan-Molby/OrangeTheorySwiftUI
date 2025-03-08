@@ -10,9 +10,9 @@ import Foundation
 
 /// A data provider that allows "on-demand" data measurement given a certain time
 protocol FakeDataProvider {
-    /// Updates the currentDistance and currentTime
+    /// Updates "live" data measurements
     mutating func executeDataMeasurement(forTime: Date)
     
-    /// Updates speedHistory and inclineHistory
+    /// Updates historical data measurements
     mutating func executeHistoryDataMeasurement(forTime: Date)
 }

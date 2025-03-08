@@ -34,7 +34,7 @@ struct MaskableCircle: Shape {
 
 
 #Preview {
-    MaskableCircle(progress: 0.5)
+    MaskableCircle(progress: 0.25)
         .rotation(.degrees(90))
         .frame(width: 300, height: 300)
         .border(.red)

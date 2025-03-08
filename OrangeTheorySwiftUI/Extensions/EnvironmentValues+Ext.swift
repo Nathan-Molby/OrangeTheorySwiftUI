@@ -9,6 +9,7 @@ import SwiftUI
 
 extension EnvironmentValues {
     @Entry var treadmillDataProvider: TreadmillDataProvider = PreviewTreadmillDataProvider()
+    @Entry var biometricDataProvider: BiometricsDataProvider = PreviewBiometricsDataProvider()
     
     @Entry var configuration = Configuration()
 }

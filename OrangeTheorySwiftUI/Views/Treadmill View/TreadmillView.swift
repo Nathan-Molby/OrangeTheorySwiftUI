@@ -13,14 +13,12 @@ struct TreadmillView: View {
     
     var body: some View {
         HStack {
-            // TODO: Heart Rate View
-            Color.gray
-                .frame(width: 400)
+            BiometricView()
+                .frame(width: 500)
             
             Spacer()
             
             VStack(spacing: 40) {
-                // TODO: Logo
                 Text("OTConnect")
                     .font(.largest)
                 
