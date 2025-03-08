@@ -1,5 +1,17 @@
-# The Goal
-The goal of this project is to recreate most of the features of the Orange Theory Tablet in order to understand some new-to-me Swift APIs.
+# Orange Theory Swiftui
+I recreated the OrangeTheory workout UI entirely SwiftUI using [Swift Charts](https://developer.apple.com/documentation/charts), [Measurements](https://developer.apple.com/documentation/foundation/measurement), a custom workout simulator, and a comprehensive configuration allowing the customization of basically everything.
+
+
+<img width="2064" alt="The UI" src="https://imgur.com/a/wE9sEAG" />
+
+The highlights of this project include:
+- Recreating the entire UI from scratch in SwiftUI
+- Utilizing SwiftCharts to build the beautiful and customizable charts for both incline and speed
+- Adding support for other units (like km, km/h, etc)
+- Creating a workout simulation with a customizable "time speed" to allow you to play back the workout at 1x all the way up to 60x speed.
+
+## Swift Charts
+
 
 ## Objectives
 - Use [Swift Charts](https://developer.apple.com/documentation/charts) to create beautiful and organic maps
