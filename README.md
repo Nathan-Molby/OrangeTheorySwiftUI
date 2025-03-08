@@ -2,7 +2,7 @@
 I recreated the OrangeTheory workout UI entirely SwiftUI using [Swift Charts](https://developer.apple.com/documentation/charts), [Measurements](https://developer.apple.com/documentation/foundation/measurement), a custom workout simulator, and a comprehensive configuration allowing the customization of basically everything.
 
 
-<img width="2064" alt="The UI" src="https://imgur.com/zpbfoXp" />
+<img width="2064" alt="The UI" src="https://i.imgur.com/zpbfoXp.png" />
 
 The highlights of this project include:
 - Recreating the entire UI from scratch in SwiftUI
