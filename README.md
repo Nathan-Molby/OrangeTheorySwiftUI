@@ -3,6 +3,9 @@ I recreated the OrangeTheory workout UI entirely SwiftUI using [Swift Charts](ht
 
 <img width="2064" alt="The UI" src="https://i.imgur.com/zpbfoXp.png" />
 
+## Demo
+https://github.com/user-attachments/assets/bc1a396a-4043-4e9c-a840-d7987ab3a40c
+
 ## Swift Charts
 My experience with Swift Charts is that it is great to get you 90% of the way to your goal, but the last 10% is made really difficult (which is perhaps true of most of SwiftUI 🤣).
 
