@@ -48,7 +48,7 @@ struct TreadmillView: View {
                         MetricView(metric: configuration.formatSpeed(dataProvider.currentSpeed), label: configuration.speedUnit.unitSpeed.symbol)
         
                         
-                        GraphView(metricBySecond: configuration.formatSpeedForGraph(dataProvider.speedHistory), averageBySecond: configuration.calculateSpeedAverageForGraph(dataProvider.speedHistory), configuration: .init(yMarkers: configuration.speedYAxis, yMarkerSuffix: nil))
+                        GraphView(metricBySecond: configuration.formatSpeedForGraph(dataProvider.speedHistory), averageBySecond: configuration.calculateSpeedAverageForGraph(dataProvider.speedHistory), configuration: .init(yMarkers: configuration.speedYAxis, yMarkerSuffix: configuration.speedUnit.unitSpeed.symbol))
                         
                         HStack {
                             MiniMetricView(metric: configuration.formatPace(at: dataProvider.currentSpeed), label: "PACE")

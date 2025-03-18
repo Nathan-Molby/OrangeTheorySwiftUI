@@ -19,42 +19,40 @@ struct Configuration {
     var chartWidthMinutes = 5.0
     
     var inclineYAxis: [Double] {
-        let valuesWhenUnitIsIncline = [5.0, 10, 15]
-        
-        return valuesWhenUnitIsIncline
-            .map {
-                let valueInIncline = Measurement<UnitAngle>(value: $0, unit: .incline)
-                
-                return valueInIncline.converted(to: inclineUnit.unitAngle)
-                    .value
-            }
+        switch inclineUnit {
+        case .incline:
+            return [5, 10, 15]
+        case .degrees:
+            return [2, 4, 6]
+        case .radians:
+            return [0.03, 0.06, 0.09]
+        }
     }
     
     var speedYAxis: [Double] {
-        let valuesWhenUnitIsMph = [3.0, 6, 9, 12]
-        
-        return valuesWhenUnitIsMph
-            .map {
-                let valueInIncline = Measurement<UnitSpeed>(value: $0, unit: .milesPerHour)
-                
-                return valueInIncline.converted(to: speedUnit.unitSpeed)
-                    .value
-            }
+        switch speedUnit {
+        case .milesPerHour:
+            return [3, 6, 9, 12]
+        case .kilometersPerHour:
+            return [5, 10, 15, 20]
+        case .metersPerSecond:
+            return [1, 3, 5, 7]
+        }
     }
     
     func formatLength(_ input: Measurement<UnitLength>) -> MetricWithUnit {
         let convertedInput = input.converted(to: lengthUnit.unitLength)
-        return .manuallyFormatted(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
+        return .init(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
     }
     
     func formatIncline(_ input: Measurement<UnitAngle>) -> MetricWithUnit {
         let convertedInput = input.converted(to: inclineUnit.unitAngle)
-        return .manuallyFormatted(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
+        return .init(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
     }
     
     func formatSpeed(_ input: Measurement<UnitSpeed>) -> MetricWithUnit {
         let convertedInput = input.converted(to: speedUnit.unitSpeed)
-        return .manuallyFormatted(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
+        return .init(metric: convertedInput.value.formatted(.number.precision(.fractionLength(2))), unit: convertedInput.unit.symbol)
     }
     
     func formatTime(_ input: TimeInterval) -> MetricWithUnit {
@@ -68,7 +66,7 @@ struct Configuration {
             formattedTime = String(format: "%02d:%02d", minutes, seconds)
         }
         
-        return .formattedByLocale(formattedTime)
+        return .init(metric: formattedTime, unit: "")
     }
     
     /// Returns the formatted time needed to complete either 1 mile or km, based on configuration at the given speed

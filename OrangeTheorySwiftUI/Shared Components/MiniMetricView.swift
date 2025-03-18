@@ -26,5 +26,5 @@ struct MiniMetricView: View {
 }
 
 #Preview {
-    MiniMetricView(metric: .manuallyFormatted(metric: "1.2", unit: "%"), label: "AVG")
+    MiniMetricView(metric: .init(metric: "1.2", unit: "%"), label: "AVG")
 }

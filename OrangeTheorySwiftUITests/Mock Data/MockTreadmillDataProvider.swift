@@ -9,20 +9,22 @@
 import Foundation
 
 class MockTreadmillDataProvider: TreadmillDataProvider {
+    var timeSinceStart: TimeInterval
+    
+    var speedHistory: [(time: TimeInterval, speed: Measurement<UnitSpeed>)]
+    var inclineHistory: [(time: TimeInterval, angle: Measurement<UnitAngle>)]
+    
     var currentDistance: Measurement<UnitLength>
-    var timeSinceStart: Measurement<UnitDuration>
     var currentIncline: Measurement<UnitAngle>
     var currentSpeed: Measurement<UnitSpeed>
-    var speedHistory: [Measurement<UnitDuration>: Measurement<UnitSpeed>]
-    var inclineHistory: [Measurement<UnitDuration>: Measurement<UnitAngle>]
     
     init(
         currentDistance: Measurement<UnitLength> = Measurement(value: 0, unit: .meters),
-        timeSinceStart: Measurement<UnitDuration> = Measurement(value: 0, unit: .seconds),
+        timeSinceStart: TimeInterval = 0,
         currentIncline: Measurement<UnitAngle> = Measurement(value: 0, unit: .degrees),
         currentSpeed: Measurement<UnitSpeed> = Measurement(value: 0, unit: .metersPerSecond),
-        speedHistory: [Measurement<UnitDuration>: Measurement<UnitSpeed>] = [:],
-        inclineHistory: [Measurement<UnitDuration>: Measurement<UnitAngle>] = [:]
+        speedHistory: [(time: TimeInterval, speed: Measurement<UnitSpeed>)] = [],
+        inclineHistory: [(time: TimeInterval, angle: Measurement<UnitAngle>)] = []
     ) {
         self.currentDistance = currentDistance
         self.timeSinceStart = timeSinceStart

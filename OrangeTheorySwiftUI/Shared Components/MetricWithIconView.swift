@@ -18,22 +18,9 @@ struct MetricWithIconView: View {
         self.icon = icon
     }
     
-    var metric: String {
-        switch metricWithUnit {
-        case .manuallyFormatted(let metric, _):
-            return metric
-        case .formattedByLocale(let metric):
-            return metric
-        }
-    }
     
     var unit: String? {
-        switch metricWithUnit {
-        case .manuallyFormatted(_, let unit):
-            return unit
-        case .formattedByLocale:
-            return nil
-        }
+        return metricWithUnit.unit.isEmpty ? nil : metricWithUnit.unit
     }
     
     
@@ -41,7 +28,7 @@ struct MetricWithIconView: View {
         VStack(alignment: .leadingAlignment1, spacing: 8) {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Label {
-                    Text(metric)
+                    Text(metricWithUnit.metric)
                         .font(.largest)
                         .italic()
                         .alignmentGuide(HorizontalAlignment.leadingAlignment1) { dimensions in
@@ -69,7 +56,7 @@ struct MetricWithIconView: View {
 }
 
 #Preview {
-    MetricWithIconView(metricWithUnit: .manuallyFormatted(metric: "5.02", unit: "mi"), label: "Total Time", icon: .init(systemName: "arrow.triangle.swap"))
+    MetricWithIconView(metricWithUnit: .init(metric: "5.02", unit: "mi"), label: "Total Time", icon: .init(systemName: "arrow.triangle.swap"))
 }
 
 extension HorizontalAlignment {

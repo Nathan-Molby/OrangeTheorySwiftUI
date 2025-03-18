@@ -40,6 +40,22 @@ I initially had my data set up poorly so it was recomputing multiple dictionarie
 
 So, in addition to having to add manual interpolation, you also have to manually downsample your data.
 
-#### Chart Axes 
+#### Chart Axis Labels
 
-TODO
+Creating chart axis labels has more of a learning curve that I expected. In my case, I wanted to accept an optional "suffix" value, which would get appended after the value on the y-axis. In order to do this, you create a `AxisMarks` object in the `chartYAxis` view modifier. `AxisMarks` takes a closure that provides you with an `AxisValue` which you are expected to convert to a string for your label. However, `AxisValue` has no meaningful properties (like a `label` or `value` property) which you can use to display. Instead, it has a `.as(P) -> P? where P: Plottable` function which you use to convert the value into a type that you can handle (Double in my case). Based on a cursory search of SwiftUI, Swift, and Swift Charts documentation, this is the _only_ `as` function across all of those codebases, and it's not obvious without finding a relevant forum post _how_ to get a String from an AxisValue for display because the Swift Chart docs only use Formatters for formatting. However, once you figure out how to do it, it's not difficult to implement.
+
+### Conclusion
+
+Swift charts seems to work well if you have good control over your data, don't want _too_ much customization, and don't have too much data. Unfortunately, for even moderate production applications, those three requirements aren't possible. As a result, you will have to do data processing to massage your data into a format acceptable by Swift Charts and you likely won't be able to get the designs exactly right. However, it does make creating charts very easy, so if you have these requirements met, it's basically plug and play.
+
+## Measurements
+I used the Measurements SDK for the foundation of this app and I would highly recommend it if you need to support multiple units in your app. It makes it incredibly easy to convert between units and add new units, which gives you the flexibility to either display the measurement in the user's locale or in their desired measurement.
+
+In my case, I allowed the user to configure their desired speed unit (mph, kph, m/s), length unit (mile, km, etc.), and incline unit (incline, degrees, radians, etc.). When I wanted to display a measurement, I converted it to their desired unit, formatted the value, and displayed it. 
+
+My most interesting use of Measurements was my need to create an "incline" unit for angle. Typically, on a treadmill, you will see your angle as an incline percentage (this is also how road grades are displayed). However, Measurements doesn't come with `Incline` as an angle unit. For new units that are converted linearly, you can use `UnitConverterLinear`, but in my case the conversion requires some trigonometry. 
+
+Accordingly, I created [InclineUnitConverter](/OrangeTheorySwiftUI/Extensions/UnitAngle+Ext.swift), which uses `tan` and `atan` to provide functions to convert `Incline` _to_ and _from_ `Degrees`. Since this is important business logic (and I messed it up like 5 times), I also created unit tests for this converter at [UnitAngleTests](/OrangeTheorySwiftUITests/UnitAngleTests.swift). These unit tests take advantage of Swift Tests parameterized tests to run 460 tests in 13 lines of code that gives me great confidence in the conversion. I also got to make a custom operator (~==) to compare two doubles, which probably isn't something I would add to the _main_ app but is a nice helper in the unit test target.
+
+## Conclusion
+This was a very fun and visual app to make, and I'm glad to have learned a lot about Swift Charts and Measurements!

@@ -14,7 +14,11 @@ struct GraphConfiguration {
     
     var scale: ClosedRange<Double> {
         let lastValue = yMarkers.last ?? 0
-        return 0...(lastValue + 1)
+        if lastValue < 1 {
+            return 0...(lastValue + 0.01)
+        } else {
+            return 0...(lastValue + 1)
+        }
     }
 }
 

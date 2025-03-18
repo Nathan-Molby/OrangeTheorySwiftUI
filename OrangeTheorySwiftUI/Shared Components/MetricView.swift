@@ -28,5 +28,5 @@ struct MetricView: View {
 }
 
 #Preview {
-    MetricView(metric: .manuallyFormatted(metric: "1.2", unit: "%"), label: "INCLINE")
+    MetricView(metric: .init(metric: "1.2", unit: "%"), label: "INCLINE")
 }
